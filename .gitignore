@@ -1,6 +1,7 @@
 logs/
 node_modules/
 new/
+venv/
 
 *.py
 !app/*.py
