@@ -1,0 +1,68 @@
+.navbar {
+    position: sticky !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1a2061; 
+    backdrop-filter: blur(8px);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Brand/Logo Styling */
+.navbar-logo {
+    margin-left: 3vh;
+    height: 8vh;
+    width: auto;
+}
+.navbar-brand .brand-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.6em;
+    font-weight: 600;
+    margin-left: 3vh;
+}
+
+.navbar-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+    margin-right: 3vh;
+}
+
+/* Anchor Tag (the actual link) Styling */
+.navbar-links a {
+    color: #bdbdbd;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+/* Hover Effect for Links */
+.navbar-links a:hover {
+    color: #A9BCD0;
+}
+
+/* Active/Current Link Styling */
+.navbar-links .active, 
+.navbar-links .active-section {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Media Query for smaller screens (optional, but recommended) */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 20px;
+    }
+    .navbar-links {
+        display: none;
+    }
+}

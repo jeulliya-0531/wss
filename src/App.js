@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './pages/Navbar';
 import LandingPage from './pages/LandingPage';
 import UploadPage from './pages/UploadPage';
 import SelfAssessment from './pages/SelfAssessment';
@@ -12,6 +13,7 @@ import './App.css';
 function App() {
   return (
     <Router>
+      <Navbar /> 
       <div className="app">
         <Routes>
           <Route path="/" element={<LandingPage />} />
