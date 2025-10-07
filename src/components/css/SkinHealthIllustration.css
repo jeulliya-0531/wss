@@ -1,0 +1,67 @@
+/* --- SVG Animation Styles --- */
+
+.hero-illustration {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
+  animation: floatUpDown 6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Floating effect for overall SVG */
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Rotating scanning ring */
+.scan-arc {
+  animation: rotateScan 8s linear infinite;
+  transform-origin: center;
+}
+@keyframes rotateScan {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Magnifier pulsing */
+.magnifier {
+  animation: magnifierPulse 3s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes magnifierPulse {
+  0%, 100% {
+    transform: translate(210px,140px) scale(1);
+  }
+  50% {
+    transform: translate(210px,140px) scale(1.05);
+  }
+}
+
+/* AI network glowing nodes */
+.ai-network circle {
+  animation: nodeGlow 2.5s ease-in-out infinite alternate;
+}
+@keyframes nodeGlow {
+  0% {
+    filter: drop-shadow(0 0 0 rgba(31,58,147,0.4));
+  }
+  100% {
+    filter: drop-shadow(0 0 6px rgba(31,58,147,0.6));
+  }
+}
+
+/* Subtle hover parallax for the entire illustration */
+.hero-illustration:hover {
+  transform: translateY(-5px) scale(1.02);
+  transition: transform 0.4s ease;
+}

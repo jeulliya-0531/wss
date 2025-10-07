@@ -57,12 +57,65 @@
     font-weight: 500;
 }
 
-/* Media Query for smaller screens (optional, but recommended) */
+/* NEW: Hamburger Button Styling (hidden by default) */
+.menu-toggle {
+    display: none; /* Hide on desktop */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001; /* Ensure it's above the menu */
+}
+
+/* Media Query for smaller screens (768px and below) */
 @media (max-width: 768px) {
     .navbar {
         padding: 10px 20px;
     }
+
+    /* Show the hamburger button */
+    .menu-toggle {
+        display: block; 
+    }
+
+    /* Mobile Menu Container Styling */
     .navbar-links {
-        display: none;
+        /* Default state: Hidden off-screen */
+        position: absolute;
+        top: 0; 
+        left: 0;
+        width: 100%;
+        height: 100vh; /* Full viewport height */
+        background-color: #1a2061; /* Dark background */
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 80px; /* Space for the fixed navbar/header content */
+        margin-right: 0;
+        
+        /* Transition for sliding effect */
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    /* Mobile Menu Open State */
+    .navbar-links.mobile-open {
+        transform: translateX(0); /* Slide fully into view */
+    }
+    
+    /* Style the links inside the mobile menu */
+    .navbar-links li {
+        width: 100%;
+        text-align: center;
+        margin: 15px 0;
+    }
+    
+    .navbar-links a {
+        font-size: 1.5em; /* Larger link text for mobile */
+        color: white;
+        padding: 10px 0;
+        display: block;
     }
 }
