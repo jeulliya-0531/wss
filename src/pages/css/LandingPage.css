@@ -176,6 +176,8 @@ html, body, #root {
   padding: 18px;
   box-shadow: 0 6px 24px rgba(15,23,42,0.04);
   min-height: 120px;
+  transition: all 0.3s ease-in-out; 
+  cursor: pointer;
 }
 
 .feature h3 {
@@ -183,7 +185,28 @@ html, body, #root {
   font-size: 1.05rem;
 }
 
-.feature p { color: #475569; line-height: 1.45; font-size: 0.96rem; margin: 0; }
+.feature p {
+  color: #374151;
+  margin: 0; 
+  line-height: 1.5; 
+  font-size: 0.95rem; 
+}
+
+/* --- FEATURE HOVER STYLES --- */
+.feature:hover {
+  background: #1f3a93;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(31, 58, 147, 0.5);
+  color: white !important;
+}
+
+.feature:hover h3 {
+  color: white;
+}
+
+.feature:hover p { 
+  color: #e0e0e0;
+}
 
 .feat-icon {
   background: linear-gradient(90deg, rgba(31,58,147,0.08), rgba(21,54,107,0.06));
@@ -195,6 +218,12 @@ html, body, #root {
   border-radius: 10px;
   color: #1f3a93;
   font-size: 18px;
+  transition: all 0.3s ease-in-out;
+}
+
+.feature:hover .feat-icon {
+  background: white;
+  color: #1f3a93;
 }
 
 /* Disclaimer */
@@ -218,7 +247,7 @@ html, body, #root {
 
 .guide-steps {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 columns for the 5 steps */
+  grid-template-columns: repeat(5, 1fr);
   gap: 16px;
   margin-top: 18px;
 }
@@ -234,10 +263,24 @@ html, body, #root {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  transition: all 0.3s ease-in-out; 
+  cursor: pointer;
+}
+
+/* --- GUIDE STEP HOVER STYLES --- */
+.guide-step:hover {
+  background: #1f3a93;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(31, 58, 147, 0.5);
+  color: white !important;
+}
+
+.guide-step:hover p { 
+  color: #e0e0e0;
 }
 
 .icon-circle {
-  position: relative; /* Needed for positioning the step number */
+  position: relative;
   width: 58px;
   height: 58px;
   border-radius: 50%;
@@ -247,10 +290,16 @@ html, body, #root {
   justify-content: center;
   margin: 0 auto 12px;
   color: #1f3a93;
-  flex-shrink: 0; /* Prevents shrinking on smaller screens */
+  flex-shrink: 0;
+  transition: all 0.3s ease-in-out;
 }
 
-/* New CSS for Step Number */
+/* --- GUIDE STEP ICON HOVER INVERSION --- */
+.guide-step:hover .icon-circle {
+  background: white;
+  color: #1f3a93;
+}
+
 .step-number {
   position: absolute;
   top: -8px;
@@ -266,6 +315,12 @@ html, body, #root {
   align-items: center;
   justify-content: center;
   border: 2px solid #ffffff;
+  transition: border-color 0.3s ease-in-out;
+}
+
+/* --- GUIDE STEP NUMBER BORDER ADJUSTMENT ON HOVER --- */
+.guide-step:hover .step-number {
+  border-color: #1f3a93;
 }
 
 .guide-step p { 
@@ -341,7 +396,7 @@ html, body, #root {
   .hero-sub { font-size: 1rem; }
   .start-button { padding: 0.8rem 2rem; font-size: 1.1rem; width: 100%; }
   .cta-section { flex-direction: column; align-items: stretch; margin-bottom: 10px; }
-  .trust-row { display: none; } /* Hide for very small screens */
+  .trust-row { display: none; }
   .hero-right { order: 1; margin-bottom: 20px; }
   .hero-left { order: 2; }
   .hero-illustration { max-width: 300px; }
@@ -372,14 +427,12 @@ html, body, #root {
   
   .features-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .guide-steps { grid-template-columns: repeat(2, 1fr); }
-  .guide-step { min-height: unset; } /* Allow height to adjust */
+  .guide-step { min-height: unset; }
 }
 
 /* Medium Devices (Desktops, 821px to 1100px) */
 @media (min-width: 821px) and (max-width: 1100px) {
   .hero-wrap { grid-template-columns: 1fr 380px; gap: 22px; }
   .hero-title { font-size: 2.6rem; }
-  
-  /* Feature grid remains 4 columns */
-  .guide-steps { grid-template-columns: repeat(3, 1fr); } /* More compact for this range */
+  .guide-steps { grid-template-columns: repeat(3, 1fr); } 
 }
