@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './css/SelfAssessment.css';
 
@@ -56,10 +56,6 @@ const DISEASES = {
     "Ipetigo": {
       attributes: [1, 1, 0, 1, 1, 1, 1, 1, 0],
       weights: [0.3, 0.4, 0, 0.3, 0.7, 0.6, 0.3, 0.2, 0]
-    },
-    "Skin_Infections": {
-      attributes: [1, 1, 0, 1, 1, 1, 1, 1, 0],
-      weights: [0.4, 0.7, 0, 0.4, 0.6, 0.3, 0.3, 0.5, 0]
     },
     "Cold_Sores": {
       attributes: [1, 1, 0, 1, 1, 1, 1, 1, 0],
@@ -203,9 +199,15 @@ const getAnswerValue = (answer) => {
 
 // Calculate average score for each disease IN A GIVEN CATEGORY OBJECT
 const calculateDiseaseAverages = (diseaseCategoryObject) => {
+  if (!diseaseCategoryObject || typeof diseaseCategoryObject !== 'object') {
+    return {};
+  }
+  
   const DISEASE_AVERAGES = {};
   for (const [disease, data] of Object.entries(diseaseCategoryObject)) {
-    DISEASE_AVERAGES[disease] = calculateArrayAverage(data.weights);
+    if (data && data.weights && Array.isArray(data.weights)) {
+      DISEASE_AVERAGES[disease] = calculateArrayAverage(data.weights);
+    }
   }
   return DISEASE_AVERAGES;
 };
@@ -222,25 +224,25 @@ const CATEGORY_SCORE_MAP = {
 };
 
 const getTargetCategory = (topPredictionCondition) => {
-  // This function now returns the key used in CATEGORY_SCORE_MAP
-  if (topPredictionCondition && topPredictionCondition.toLowerCase().includes('infectious')) {
-    return 'INFECTIOUS';
-  } else if (topPredictionCondition && topPredictionCondition.toLowerCase().includes('autoimmune')) {
-    return 'AUTOIMMUNE';
-  } else if (topPredictionCondition && (topPredictionCondition.toLowerCase().includes('benign') || topPredictionCondition.toLowerCase().includes('growth'))) {
-    return 'BENIGN_GROWTH';
-  } else if (topPredictionCondition && topPredictionCondition.toLowerCase().includes('cancer')) {
-    return 'SKIN_CANCER'; // Match the object name
-  } else if (topPredictionCondition && topPredictionCondition.toLowerCase().includes('pigmentary')) {
-    return 'PIGMENTARY';
-  } else if (topPredictionCondition && topPredictionCondition.toLowerCase().includes('environmental')) {
-    return 'ENVIRONMENTAL';
-  } else {
-    // Default to inflammatory for conditions like 'Acne', 'Psoriasis', etc.
-    return 'INFLAMMATORY';
+  if (!topPredictionCondition) return;
+
+  const condition = topPredictionCondition.toLowerCase();
+
+  const categories = {
+    INFLAMMATORY: ['acne', 'dermatitis'],
+    INFECTIOUS: ['molluscum contagiosum', 'ringworm', 'warts'],
+    AUTOIMMUNE: ['vitiligo'],
+    SKIN_CANCER: ['cancer'],
+    PIGMENTARY: ['pigmentary'],
+    ENVIRONMENTAL: ['environmental']
+  };
+
+  for (const [category, keywords] of Object.entries(categories)) {
+    if (keywords.some(keyword => condition.includes(keyword))) {
+      return category;
+    }
   }
 };
-
 
 
 const calculateWeightedResults = (assessmentAnswers, topPredictionCondition) => {
@@ -252,6 +254,11 @@ const calculateWeightedResults = (assessmentAnswers, topPredictionCondition) => 
 
   const targetCategoryKey = getTargetCategory(topPredictionCondition);
   const targetCategoryDiseases = CATEGORY_SCORE_MAP[targetCategoryKey];
+  
+  if (!targetCategoryDiseases) {
+    return results;
+  }
+  
   const targetDiseaseAverages = calculateDiseaseAverages(targetCategoryDiseases);
 
   // Iterate over diseases in the target category
@@ -268,15 +275,11 @@ const calculateWeightedResults = (assessmentAnswers, topPredictionCondition) => 
         const characteristicValue = attributes[attributeIndex] || 0;
 
         if (answerValue !== characteristicValue) {
-          // Penalize for mismatch
           totalWeight -= targetDiseaseAverages[diseaseName];
         } else {
-          // Reward for match
           if (answerValue === 0 && characteristicValue === 0) {
-            // Double negative: add the average
             totalWeight += targetDiseaseAverages[diseaseName];
           } else if (answerValue === 1 && characteristicValue === 1) {
-            // Positive match: add the specific weight
             totalWeight += weights[attributeIndex];
           }
         }
@@ -292,8 +295,8 @@ function SelfAssessment() {
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [showDebug, setShowDebug] = useState(false); // Add debug state
-  const [diseaseScores, setDiseaseScores] = useState({}); // Add disease scores state
+  const [showDebug, setShowDebug] = useState(false);
+  const [diseaseScores, setDiseaseScores] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
   const capturedImage = location.state?.capturedImage;
@@ -354,11 +357,15 @@ const calculateAllDiseaseScores = (currentAnswers, topPredictionCondition) => {
 
   const targetCategoryKey = getTargetCategory(topPredictionCondition);
   const targetCategoryDiseases = CATEGORY_SCORE_MAP[targetCategoryKey];
+  
+  if (!targetCategoryDiseases) {
+    return {};
+  }
+  
   const targetDiseaseAverages = calculateDiseaseAverages(targetCategoryDiseases);
   const allScores = {};
 
   Object.entries(targetCategoryDiseases).forEach(([diseaseName, diseaseData]) => {
-    // Add initial positive score to prevent negative values
     const INITIAL_SCORE = 5;
     let totalWeight = INITIAL_SCORE;
     const { weights, attributes } = diseaseData;
@@ -383,15 +390,26 @@ const calculateAllDiseaseScores = (currentAnswers, topPredictionCondition) => {
       }
     });
 
-    allScores[diseaseName] = Math.max(-10, totalWeight); // Ensure score doesn't go below 0
+    allScores[diseaseName] = Math.max(-10, totalWeight);
   });
 
   return allScores;
 };
 
 useEffect(() => {
-  // Get the top prediction from location state
-  const topPrediction = predictions?.[0]?.condition || '';
+  let topPrediction = '';
+  
+  // Handle different prediction structures
+  if (predictions) {
+    if (Array.isArray(predictions) && predictions.length > 0) {
+      topPrediction = predictions[0]?.condition || '';
+    } else if (predictions.top_prediction) {
+      topPrediction = predictions.top_prediction;
+    } else if (typeof predictions === 'string') {
+      topPrediction = predictions;
+    }
+  }
+  
   const scores = calculateAllDiseaseScores(answers, topPrediction);
   setDiseaseScores(scores);
 }, [answers, predictions]);
@@ -432,8 +450,6 @@ useEffect(() => {
 
 const renderDebugPanel = () => {
     if (!showDebug) return null;
-
-    // Sort diseases by score (highest first)
     const sortedDiseases = Object.entries(diseaseScores)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10); // Show top 10 diseases
@@ -475,6 +491,20 @@ const renderDebugPanel = () => {
   const currentQuestion = questions[step - 1];
   const isLastQuestion = step === questions.length;
 
+  // Extract top prediction for debug button
+  const getTopPrediction = () => {
+    if (!predictions) return 'No prediction';
+    
+    if (Array.isArray(predictions) && predictions.length > 0) {
+      return predictions[0]?.condition || 'Unknown condition';
+    } else if (predictions.top_prediction) {
+      return predictions.top_prediction;
+    } else if (typeof predictions === 'string') {
+      return predictions;
+    }
+    return 'No prediction';
+  };
+
   return (
     <div className="assessment-container">
       {isLoading && (
@@ -492,6 +522,7 @@ const renderDebugPanel = () => {
         onClick={() => setShowDebug(!showDebug)}
       >
         <p>debug</p>
+        <small>Top: {getTopPrediction()}</small>
       </button>
       
       {renderDebugPanel()}
@@ -564,5 +595,5 @@ export {
   handleAnswer,
   calculateDiseaseAverages,
   calculateWeightedResults,
-  getTargetCategory // Add this export
+  getTargetCategory
 };
