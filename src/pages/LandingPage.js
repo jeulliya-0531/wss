@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/LandingPage.css';
+import Navbar from './Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faUpload, faClock, faListCheck, faUserMd, faFileLines } from '@fortawesome/free-solid-svg-icons';
 
@@ -137,8 +138,11 @@ function LandingPage() {
   };
 
   const guideSteps = [
-    { icon: faCamera, text: `Prepare a clear photo of the affected skin area.\t\tTip: Ensure clear lighting, no flash, and sharp focus.\n\n\nWe accept: JPEG, PNG.`
-},
+    { icon: faCamera, text: [
+      'Prepare a clear photo of the affected skin area.',
+      'Tip: Ensure clear lighting, no flash, and sharp focus.',
+      'We accept: JPEG, PNG.'
+    ] },
     { icon: faUpload, text: 'Upload the photo and complete a brief assessment.' },
     { icon: faClock, text: 'Wait for the model to analyze your image and return results.' },
     { icon: faFileLines, text: 'Read the result and suggested next steps.' },
@@ -146,7 +150,7 @@ function LandingPage() {
   ];
 
   return (
-    <div className="landing-root">
+    <div className="landing-root" id='home'>
       <header className="hero-wrap">
         <div className="hero-left">
           <div className="brand-row">
@@ -242,7 +246,7 @@ function LandingPage() {
                   <span className="step-number">{index + 1}</span> {/* Step Number */}
                   <FontAwesomeIcon icon={step.icon} className="guide-icon"/>
                 </div>
-                <p>{step.text}</p>
+                <p className="whitespace-pre-line">{step.text}</p>
               </div>
             ))}
           </div>

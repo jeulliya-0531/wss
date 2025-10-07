@@ -31,7 +31,7 @@ function Navbar() {
       <ul className="navbar-links">
         {/* Home Link */}
         <li>
-          <Link to="/" onClick={handleNavigation('/', null)} className={location.pathname === '/' ? 'active' : ''}>
+          <Link to="/" onClick={handleNavigation('/', 'home')} className={location.pathname === '/' ? 'active' : ''}>
             Home
           </Link>
         </li>
