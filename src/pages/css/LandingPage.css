@@ -209,7 +209,7 @@ html, body, #root {
 }
 
 .feat-icon {
-  background: linear-gradient(90deg, rgba(31,58,147,0.08), rgba(21,54,107,0.06));
+  background: linear-gradient(90deg, rgba(31,58,147,0.08), rgba(21, 54, 107, 0.06));
   display: inline-flex;
   align-items: center;
   justify-content: center;

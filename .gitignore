@@ -1,7 +1,9 @@
 logs/
 node_modules/
 new/
-
+__pycache__/
+venv/
 *.py
+!run.py
 !app/*.py
 !app/api/**/*.py
